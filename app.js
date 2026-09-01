@@ -4,10 +4,15 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const db = require('./models');
+
 var app = express();
+
+db.sequelize.sync({ force: false });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

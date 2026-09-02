@@ -7,10 +7,17 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var hotelsRouter = require('./routes/hotels');
 
 const db = require('./models');
 
 var app = express();
+
+app.use(
+  '/bootstrap',
+  express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
+);
+
 
 db.sequelize.sync({ force: false });
 
@@ -26,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/hotels', hotelsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

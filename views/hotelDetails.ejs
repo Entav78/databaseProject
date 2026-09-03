@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><%= title %></title>
+
+  <link
+    rel="stylesheet"
+    href="/bootstrap/css/bootstrap.min.css"
+  >
+</head>
+
+<body>
+  <main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h2 mb-0"><%= hotel.Name %></h1>
+
+      <a href="/hotels" class="btn btn-outline-secondary">
+        Back to hotels
+      </a>
+    </div>
+      <% if (ratingCreated) { %>
+        <div class="alert alert-success">
+          Your rating was saved.
+        </div>
+      <% } %>
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5 card-title">Hotel information</h2>
+
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Location</dt>
+          <dd class="col-sm-9"><%= hotel.Location %></dd>
+
+          <dt class="col-sm-3">Average rating</dt>
+          <dd class="col-sm-9">
+            <% if (hotel.AvgRate === null) { %>
+              No ratings yet
+            <% } else { %>
+              <%= Number(hotel.AvgRate).toFixed(1) %> / 5
+            <% } %>
+          </dd>
+
+          <dt class="col-sm-3">Your rating</dt>
+
+          <dd class="col-sm-9">
+            <% if (hotel.HasRated) { %>
+              You have already rated this hotel.
+            <% } else { %>
+              <form
+                method="POST"
+                action="/hotels/<%= hotel.id %>/ratings"
+                class="d-flex align-items-center gap-2"
+              >
+                <label for="rating" class="visually-hidden">
+                  Rating
+                </label>
+
+                <select
+                  id="rating"
+                  name="value"
+                  class="form-select w-auto"
+                  required
+                >
+                  <option value="">Choose rating</option>
+                  <option value="1">1 – Poor</option>
+                  <option value="2">2 – Fair</option>
+                  <option value="3">3 – Good</option>
+                  <option value="4">4 – Very good</option>
+                  <option value="5">5 – Excellent</option>
+                </select>
+
+                <button type="submit" class="btn btn-success">
+                  Rate this hotel
+                </button>
+              </form>
+            <% } %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><%= title %></title>
+
+  <link
+    rel="stylesheet"
+    href="/bootstrap/css/bootstrap.min.css"
+  >
+</head>
+
+<body>
+  <main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h2 mb-0">
+        <%= user.FirstName %> <%= user.LastName %>
+      </h1>
+
+      <a href="/hotels" class="btn btn-outline-secondary">
+        Back to hotels
+      </a>
+    </div>
+
+    <h2 class="h4 mb-3">My reservations</h2>
+
+    <% if (user.Rooms.length === 0) { %>
+      <div class="alert alert-info">
+        You currently have no reservations.
+      </div>
+    <% } else { %>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Hotel</th>
+              <th scope="col">Location</th>
+              <th scope="col">Capacity</th>
+              <th scope="col">Price per day</th>
+              <th scope="col">Arrival</th>
+              <th scope="col">Departure</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% user.Rooms.forEach(function (room) { %>
+              <tr>
+                <td><%= room.Hotel.Name %></td>
+
+                <td><%= room.Hotel.Location %></td>
+
+                <td>
+                  <%= room.Capacity %>
+                  <%= room.Capacity === 1 ? 'person' : 'people' %>
+                </td>
+
+                <td>
+                  <%= Number(room.PricePerDay).toFixed(2) %>
+                </td>
+
+                <td>
+                  <%= new Date(
+                    room.Reservation.StartDate
+                  ).toLocaleString('en-GB', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                  }) %>
+                </td>
+
+                <td>
+                  <%= new Date(
+                    room.Reservation.EndDate
+                  ).toLocaleString('en-GB', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                  }) %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

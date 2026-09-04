@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/javascripts/users.js" defer></script>
+
+  <title><%= title %></title>
+
+  <link
+    rel="stylesheet"
+    href="/bootstrap/css/bootstrap.min.css"
+  >
+</head>
+
+<body>
+  <%- include('partials/authStatus') %>
+
+  <main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h2 mb-0">Users</h1>
+
+      <a href="/hotels" class="btn btn-outline-secondary">
+        Back to hotels
+      </a>
+    </div>
+
+    <% if (users.length === 0) { %>
+      <div class="alert alert-info">
+        No users were found.
+      </div>
+    <% } else { %>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Username</th>
+              <th scope="col">Role</th>
+              <th scope="col" class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% users.forEach(function (user) { %>
+              <tr>
+                <td><%= user.id %></td>
+
+                <td>
+                  <%= user.FirstName %> <%= user.LastName %>
+                </td>
+
+                <td><%= user.Username %></td>
+
+                <td>
+                  <span
+                    class="badge <%= user.Role === 'Admin'
+                      ? 'bg-primary'
+                      : 'bg-secondary' %>"
+                  >
+                    <%= user.Role %>
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <div class="d-flex justify-content-end gap-2">
+                    <a
+                      href="/users/<%= user.id %>"
+                      class="btn btn-outline-secondary btn-sm"
+                    >
+                      Details
+                    </a>
+
+                    <% if (user.Role !== 'Admin') { %>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm delete-user"
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.FirstName %> <%= user.LastName %>"
+                      >
+                        Delete
+                      </button>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

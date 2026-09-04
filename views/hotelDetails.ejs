@@ -13,6 +13,8 @@
 </head>
 
 <body>
+  <%- include("partials/authStatus") %>
+
   <main class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="h2 mb-0"><%= hotel.Name %></h1>
@@ -21,11 +23,13 @@
         Back to hotels
       </a>
     </div>
-      <% if (ratingCreated) { %>
-        <div class="alert alert-success">
-          Your rating was saved.
-        </div>
-      <% } %>
+
+    <% if (ratingCreated) { %>
+      <div class="alert alert-success">
+        Your rating was saved.
+      </div>
+    <% } %>
+
     <div class="card">
       <div class="card-body">
         <h2 class="h5 card-title">Hotel information</h2>
@@ -44,9 +48,11 @@
           </dd>
 
           <dt class="col-sm-3">Your rating</dt>
-
           <dd class="col-sm-9">
-            <% if (hotel.HasRated) { %>
+            <% if (!currentUser) { %>
+              <a href="/login">Log in</a>
+              to rate this hotel.
+            <% } else if (hotel.HasRated) { %>
               You have already rated this hotel.
             <% } else { %>
               <form

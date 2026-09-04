@@ -1,8 +1,10 @@
 const { QueryTypes } = require('sequelize');
+const createError = require('http-errors');
 
 class HotelService {
   constructor(db) {
     this.sequelize = db.sequelize;
+    this.Hotel = db.Hotel;
   }
 
   async getAllHotels() {
@@ -15,6 +17,16 @@ class HotelService {
       }
     );
   }
+
+  async getHotelById(hotelId) {
+  return this.Hotel.findByPk(hotelId, {
+    attributes: [
+      'id',
+      'Name',
+      'Location'
+    ]
+  });
+}
 
   async getHotelDetails(hotelId, userId) {
     const hotels = await this.sequelize.query(
@@ -55,18 +67,41 @@ class HotelService {
   }
 
   async createHotel(name, location) {
-    return this.sequelize.query(
-      `INSERT INTO Hotels (Name, Location)
-       VALUES (:name, :location)`,
-      {
-        replacements: {
-          name,
-          location
-        },
-        type: QueryTypes.INSERT
-      }
+  const normalizedName =
+    typeof name === 'string' ? name.trim() : '';
+
+  const normalizedLocation =
+    typeof location === 'string' ? location.trim() : '';
+
+  if (!normalizedName || !normalizedLocation) {
+    throw createError(
+      400,
+      'Hotel name and location are required.'
     );
   }
+
+  if (
+    normalizedName.length > 255 ||
+    normalizedLocation.length > 255
+  ) {
+    throw createError(
+      400,
+      'Hotel name and location must not exceed 255 characters.'
+    );
+  }
+
+  return this.sequelize.query(
+    `INSERT INTO Hotels (Name, Location)
+     VALUES (:name, :location)`,
+    {
+      replacements: {
+        name: normalizedName,
+        location: normalizedLocation
+      },
+      type: QueryTypes.INSERT
+    }
+  );
+}
 
   async deleteHotel(hotelId) {
     return this.sequelize.query(

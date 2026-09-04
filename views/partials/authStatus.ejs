@@ -1,0 +1,45 @@
+<nav class="navbar bg-light border-bottom mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/hotels">
+      Hotel Booking
+    </a>
+
+    <div class="d-flex align-items-center gap-3">
+      <% if (currentUser) { %>
+        <span class="text-muted">
+          Signed in as
+          <strong><%= currentUser.Username %></strong>
+        </span>
+
+          <% if (currentUser.Role === 'Admin') { %>
+            <a
+              href="/users"
+              class="btn btn-outline-secondary btn-sm"
+            >
+              Manage users
+            </a>
+          <% } %>
+        <a
+          href="/users/<%= currentUser.id %>"
+          class="btn btn-outline-primary btn-sm"
+        >
+          My reservations
+        </a>
+
+        <form action="/logout" method="POST" class="m-0">
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            Log out
+          </button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-outline-primary btn-sm">
+          Log in
+        </a>
+
+        <a href="/signup" class="btn btn-primary btn-sm">
+          Sign up
+        </a>
+      <% } %>
+    </div>
+  </div>
+</nav>

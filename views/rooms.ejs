@@ -13,9 +13,13 @@
 </head>
 
 <body>
+  <%- include("partials/authStatus") %>
+
   <main class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="h2 mb-0">Choose a room</h1>
+      <h1 class="h2 mb-0">
+        <%= currentUser ? 'Choose a room' : 'Rooms' %>
+      </h1>
 
       <a href="/hotels" class="btn btn-outline-secondary">
         Back to hotels
@@ -36,7 +40,7 @@
       <div class="list-group">
         <% rooms.forEach(function (room) { %>
           <div class="list-group-item">
-            <div class="mb-3">
+            <div class="<%= currentUser ? 'mb-3' : '' %>">
               <strong>
                 Room for <%= room.Capacity %> people
               </strong>
@@ -46,57 +50,67 @@
               </span>
             </div>
 
-            <form
-              method="POST"
-              action="/rooms/<%= room.id %>/reservations"
-              class="row g-3 align-items-end"
-            >
-              <input
-                type="hidden"
-                name="hotelId"
-                value="<%= hotelId %>"
+            <% if (currentUser) { %>
+              <form
+                method="POST"
+                action="/rooms/<%= room.id %>/reservations"
+                class="row g-3 align-items-end"
               >
-
-              <div class="col-md-4">
-                <label
-                  for="startDate-<%= room.id %>"
-                  class="form-label"
-                >
-                  Arrival
-                </label>
-
                 <input
-                  type="datetime-local"
-                  id="startDate-<%= room.id %>"
-                  name="startDate"
-                  class="form-control"
-                  required
+                  type="hidden"
+                  name="hotelId"
+                  value="<%= hotelId %>"
                 >
-              </div>
 
-              <div class="col-md-4">
-                <label
-                  for="endDate-<%= room.id %>"
-                  class="form-label"
-                >
-                  Departure
-                </label>
+                <div class="col-md-4">
+                  <label
+                    for="startDate-<%= room.id %>"
+                    class="form-label"
+                  >
+                    Arrival
+                  </label>
 
-                <input
-                  type="datetime-local"
-                  id="endDate-<%= room.id %>"
-                  name="endDate"
-                  class="form-control"
-                  required
-                >
-              </div>
+                  <input
+                    type="datetime-local"
+                    id="startDate-<%= room.id %>"
+                    name="startDate"
+                    class="form-control"
+                    required
+                  >
+                </div>
 
-              <div class="col-md-4">
-                <button type="submit" class="btn btn-primary w-100">
-                  Rent this room
-                </button>
-              </div>
-            </form>
+                <div class="col-md-4">
+                  <label
+                    for="endDate-<%= room.id %>"
+                    class="form-label"
+                  >
+                    Departure
+                  </label>
+
+                  <input
+                    type="datetime-local"
+                    id="endDate-<%= room.id %>"
+                    name="endDate"
+                    class="form-control"
+                    required
+                  >
+                </div>
+
+                <div class="col-md-4">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                  >
+                    Rent this room
+                  </button>
+                </div>
+              </form>
+            <% } else { %>
+              <p class="mb-0 mt-2">
+                <a href="/login">Log in</a>
+                to reserve this room.
+              </p>
+            <% } %>
           </div>
         <% }); %>
       </div>

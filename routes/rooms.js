@@ -55,15 +55,15 @@ router.post(
   async function (req, res, next) {
     try {
       const roomId = Number(req.params.roomId);
-      const hotelId = Number(req.body.hotelId);
       const { startDate, endDate } = req.body;
 
-      await reservationService.createReservation(
-        req.user.id,
-        roomId,
-        startDate,
-        endDate
-      );
+      const hotelId =
+        await reservationService.createReservation(
+          req.user.id,
+          roomId,
+          startDate,
+          endDate
+        );
 
       res.redirect(`/rooms/${hotelId}?reserved=true`);
     } catch (error) {

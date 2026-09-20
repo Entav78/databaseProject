@@ -5,6 +5,7 @@ class ReservationService {
   constructor(db) {
     this.sequelize = db.sequelize;
     this.Room = db.Room;
+    this.Reservation = db.Reservation;
   }
 
   async createReservation(userId, roomId, startDate, endDate) {
@@ -48,6 +49,14 @@ class ReservationService {
       }
 
     try {
+        const reservation = this.Reservation.build({
+          UserId: userId,
+          RoomId: roomId,
+          StartDate: parsedStartDate,
+          EndDate: parsedEndDate
+        });
+
+        await reservation.validate();
         await this.sequelize.query(
           `INSERT INTO Reservations
             (UserId, RoomId, StartDate, EndDate)

@@ -8,6 +8,8 @@ const session = require("express-session");
 const passport = require("passport");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const configurePassport = require("./config/passport");
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger-output.json');
 
 
 var indexRouter = require('./routes/index');
@@ -78,6 +80,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/hotels', hotelsRouter);
 app.use('/rooms', roomsRouter);
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

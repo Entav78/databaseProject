@@ -14,10 +14,13 @@ const hotelService = new HotelService(db);
 const ratingService = new RatingService(db);
 
 router.get('/', async function (req, res, next) {
+    // #swagger.tags = ['Hotels']
+    // #swagger.description = 'Displays the list of all hotels.'
+    // #swagger.produces = ['text/html']
   try {
     const hotels = await hotelService.getAllHotels();
 
-    res.render('hotels', {
+    res.status(200).render('hotels', {
       title: 'Hotels',
       hotels
     });
@@ -57,6 +60,15 @@ router.post(
   requireAuthentication,
   requireAdmin,
   async function (req, res, next) {
+        // #swagger.tags = ['Hotels']
+        // #swagger.description = 'Creates a new hotel. Requires an administrator.'
+        /* #swagger.parameters['body'] = {
+          in: 'body',
+          required: true,
+          schema: {
+            $ref: '#/definitions/Hotel'
+          }
+        } */
     try {
       const { Name, Location } = req.body;
 

@@ -8,13 +8,12 @@ const HotelService = require('../services/HotelService');
 
 const {
   requireAuthentication,
-  requireAdmin
+  requireAdmin,
 } = require('../middleware/accessControl');
 
 const roomService = new RoomService(db);
 const reservationService = new ReservationService(db);
 const hotelService = new HotelService(db);
-
 
 router.get('/:hotelId', async function (req, res, next) {
   try {
@@ -40,9 +39,7 @@ router.get('/:hotelId', async function (req, res, next) {
       title: 'Rooms',
       rooms,
       hotelId,
-      reservationCreated:
-        Boolean(req.user) &&
-        req.query.reserved === 'true'
+      reservationCreated: Boolean(req.user) && req.query.reserved === 'true',
     });
   } catch (error) {
     next(error);
@@ -57,19 +54,18 @@ router.post(
       const roomId = Number(req.params.roomId);
       const { startDate, endDate } = req.body;
 
-      const hotelId =
-        await reservationService.createReservation(
-          req.user.id,
-          roomId,
-          startDate,
-          endDate
-        );
+      const hotelId = await reservationService.createReservation(
+        req.user.id,
+        roomId,
+        startDate,
+        endDate,
+      );
 
       res.redirect(`/rooms/${hotelId}?reserved=true`);
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 router.post(
@@ -83,14 +79,18 @@ router.post(
       await roomService.createRoom(
         Number(Capacity),
         Number(PricePerDay),
-        Number(HotelId)
+        Number(HotelId),
       );
+
+      if (req.is('application/x-www-form-urlencoded')) {
+        return res.redirect(303, `/rooms/${Number(HotelId)}`);
+      }
 
       res.sendStatus(201);
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 router.delete(
@@ -107,7 +107,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 module.exports = router;

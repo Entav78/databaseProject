@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title><%= title %></title>
 
-  <link
-    rel="stylesheet"
-    href="/bootstrap/css/bootstrap.min.css"
-  >
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -26,90 +24,90 @@
       </a>
     </div>
 
+    <% if (currentUser && currentUser.Role === 'Admin') { %>
+    <section class="card card-body mb-4">
+      <h2 class="h5">Add a room</h2>
+
+      <form action="/rooms" method="POST" id="add-room-form">
+        <input type="hidden" name="HotelId" value="<%= hotelId %>">
+        <div class="mb-3">
+          <label for="capacity" class="form-label">Capacity</label>
+
+          <input id="capacity" name="Capacity" type="number" min="1" step="1" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="price-per-day" class="form-label">Price per day</label>
+
+          <input id="price-per-day" name="PricePerDay" type="number" min="0.01" step="0.01" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+          Add room
+        </button>
+      </form>
+    </section>
+
+    <% } %>
     <% if (reservationCreated) { %>
-      <div class="alert alert-success">
-        Your reservation was created.
-      </div>
+    <div class="alert alert-success">
+      Your reservation was created.
+    </div>
     <% } %>
 
     <% if (rooms.length === 0) { %>
-      <div class="alert alert-info">
-        This hotel currently has no available rooms.
-      </div>
+    <div class="alert alert-info">
+      This hotel currently has no available rooms.
+    </div>
     <% } else { %>
-      <div class="list-group">
-        <% rooms.forEach(function (room) { %>
-          <div class="list-group-item">
-            <div class="<%= currentUser ? 'mb-3' : '' %>">
-              <strong>
-                Room for <%= room.Capacity %> people
-              </strong>
+    <div class="list-group">
+      <% rooms.forEach(function (room) { %>
+      <div class="list-group-item">
+        <div class="<%= currentUser ? 'mb-3' : '' %>">
+          <strong>
+            Room for <%= room.Capacity %> people
+          </strong>
 
-              <span class="text-body-secondary ms-2">
-                <%= Number(room.PricePerDay).toFixed(2) %> per day
-              </span>
-            </div>
+          <span class="text-body-secondary ms-2">
+            <%= Number(room.PricePerDay).toFixed(2) %> per day
+          </span>
+        </div>
 
-            <% if (currentUser) { %>
-              <form
-                method="POST"
-                action="/rooms/<%= room.id %>/reservations"
-                class="row g-3 align-items-end"
-              >
+        <% if (currentUser) { %>
+        <form method="POST" action="/rooms/<%= room.id %>/reservations" class="row g-3 align-items-end">
 
-                <div class="col-md-4">
-                  <label
-                    for="startDate-<%= room.id %>"
-                    class="form-label"
-                  >
-                    Arrival
-                  </label>
+          <div class="col-md-4">
+            <label for="startDate-<%= room.id %>" class="form-label">
+              Arrival
+            </label>
 
-                  <input
-                    type="datetime-local"
-                    id="startDate-<%= room.id %>"
-                    name="startDate"
-                    class="form-control"
-                    required
-                  >
-                </div>
-
-                <div class="col-md-4">
-                  <label
-                    for="endDate-<%= room.id %>"
-                    class="form-label"
-                  >
-                    Departure
-                  </label>
-
-                  <input
-                    type="datetime-local"
-                    id="endDate-<%= room.id %>"
-                    name="endDate"
-                    class="form-control"
-                    required
-                  >
-                </div>
-
-                <div class="col-md-4">
-                  <button
-                    type="submit"
-                    class="btn btn-primary w-100"
-                  >
-                    Rent this room
-                  </button>
-                </div>
-              </form>
-            <% } else { %>
-              <p class="mb-0 mt-2">
-                <a href="/login">Log in</a>
-                to reserve this room.
-              </p>
-            <% } %>
+            <input type="datetime-local" id="startDate-<%= room.id %>" name="startDate" class="form-control" required>
           </div>
-        <% }); %>
+
+          <div class="col-md-4">
+            <label for="endDate-<%= room.id %>" class="form-label">
+              Departure
+            </label>
+
+            <input type="datetime-local" id="endDate-<%= room.id %>" name="endDate" class="form-control" required>
+          </div>
+
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-primary w-100">
+              Rent this room
+            </button>
+          </div>
+        </form>
+        <% } else { %>
+        <p class="mb-0 mt-2">
+          <a href="/login">Log in</a>
+          to reserve this room.
+        </p>
+        <% } %>
       </div>
+      <% }); %>
+    </div>
     <% } %>
   </main>
 </body>
+
 </html>

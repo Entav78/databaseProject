@@ -23,5 +23,8 @@
     "sequelize": "^6.28.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "selenium-webdriver": "^4.50.0"
   }
 }
